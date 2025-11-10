@@ -1,5 +1,8 @@
 ## README file
 
+Distributed Task Management & Monitoring System
+------------------------------------------------
+
 ### Notes for me
 
 - Open a terminal in the project directory.

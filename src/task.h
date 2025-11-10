@@ -1,20 +1,29 @@
 #ifndef TASK_H
 #define TASK_H
 
-#define MAX_TASKS 100
+#include <string>
+#include <vector>
 
 struct Task {
     int id;
-    char title[100];
-    int completed; // 0 = not done, 1 = done
+    std::string title;
+    bool completed;
 };
 
-extern Task tasks[MAX_TASKS];
-extern int taskCount;
+class TaskManager {
+private:
+    std::vector<Task> tasks;
+    const std::string filename = "tasks.txt";
 
-void addTask();
-void listTasks();
-void markDone();
-void deleteTask();
+    void saveTasks() const;
+    void loadTasks();
 
-#endif 
+public:
+    TaskManager();
+    void addTask();
+    void listTasks() const;
+    void markDone();
+    void deleteTask();
+};
+
+#endif

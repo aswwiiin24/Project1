@@ -1,0 +1,4 @@
+1|understand all working|0
+2|push to git|0
+3|what is cli?|0
+4|add unit tests|0
