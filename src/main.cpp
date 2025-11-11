@@ -1,4 +1,6 @@
 #include <iostream>
+#include <limits>
+
 #include "task.h"
 
 int main() {
@@ -7,7 +9,14 @@ int main() {
         std::cout << "\n1. Add Task\n2. List Tasks\n3. Mark Done\n4. Delete Task\n5. Exit\nEnter choice: ";
 
         int choice;
-        if (!(std::cin >> choice)) break;
+        std::cin >> choice;
+
+        if (std::cin.fail()) {
+            std::cin.clear(); // clear error flag detected by cin.fail()
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // discard invalid input
+            std::cout << "Invalid input! Please enter a number.\n";
+            continue;
+        }
 
         switch (choice) {
             case 1: tm.addTask(); break;

@@ -15,7 +15,7 @@ private:
     std::vector<Task> tasks;
     const std::string filename = "tasks.txt";
 
-    void saveTasks() const;
+    void saveTasks() const; //const to ensure it doesn't modify member variables
     void loadTasks();
 
 public:

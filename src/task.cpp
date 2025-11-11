@@ -45,6 +45,19 @@ void TaskManager::addTask() {
     std::cout << "Enter task title: ";
     std::getline(std::cin, title);
 
+    bool valid = false;
+    for (char c : title) {
+        if (!std::isspace(static_cast<unsigned char>(c))) {
+            valid = true;
+            break;
+        }
+    }
+
+    if (!valid) {
+        std::cout << "Task title cannot be empty. Please try again.\n";
+        return;
+    }
+
     Task t;
     t.id = tasks.empty() ? 1 : tasks.back().id + 1;
     t.title = title;
