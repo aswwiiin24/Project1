@@ -29,6 +29,8 @@ public:
     void markDone();
     void deleteTask();
     void editTask();
+    void searchTasks() const;
+    void sortTasks();
 };
 
 #endif

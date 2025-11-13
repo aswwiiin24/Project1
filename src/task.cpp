@@ -190,3 +190,65 @@ void TaskManager::editTask() {
     std::cout << "Task updated successfully.\n";
 }
 
+void TaskManager::searchTasks() const {
+    if (tasks.empty()) {
+        std::cout << "No tasks available.\n";
+        return;
+    }
+
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cout << "Enter keyword to search (or type 'done' / 'pending' to filter by status): ";
+    std::string query;
+    std::getline(std::cin, query);
+
+    bool found = false;
+    std::cout << "\n--- Search Results ---\n";
+
+    for (const auto &t : tasks) {
+        bool match = false;
+
+        // Case-insensitive match for title
+        std::string titleLower = t.title;
+        std::string queryLower = query;
+        std::transform(titleLower.begin(), titleLower.end(), titleLower.begin(), ::tolower);
+        std::transform(queryLower.begin(), queryLower.end(), queryLower.begin(), ::tolower);
+
+        if (titleLower.find(queryLower) != std::string::npos) match = true;
+
+        if (queryLower == "done" && t.completed) match = true;
+        if (queryLower == "pending" && !t.completed) match = true;
+
+        if (match) {
+            found = true;
+            std::cout << t.id << ". " << t.title
+                      << " [Priority: " << t.priority << "] "
+                      << "[" << (t.completed ? "Done" : "Pending") << "]\n";
+        }
+    }
+
+    if (!found) std::cout << "No matching tasks found.\n";
+}
+
+void TaskManager::sortTasks() {
+    if (tasks.empty()) {
+        std::cout << "No tasks to sort.\n";
+        return;
+    }
+
+    std::sort(tasks.begin(), tasks.end(),
+              [](const Task &a, const Task &b) {
+                  // Pending tasks first, then completed
+                  if (a.completed != b.completed)
+                      return !a.completed && b.completed;
+                  // If same status, sort by priority (High > Low)
+                  return a.priority > b.priority;
+              });
+
+    // Reassign IDs after sorting
+    for (size_t i = 0; i < tasks.size(); ++i)
+        tasks[i].id = static_cast<int>(i + 1);
+
+    saveTasks();
+    std::cout << "Tasks sorted by completion and priority.\n";
+}
+
