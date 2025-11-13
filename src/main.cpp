@@ -6,8 +6,8 @@
 int main() {
     TaskManager tm;
     while (true) {
-        std::cout << "\n1. Add Task\n2. List Tasks\n3. Mark Done\n4. Delete Task\n5. Exit\nEnter choice: ";
-
+        std::cout << "\n1. Add Task\n2. List Tasks\n3. Mark Done\n4. Delete Task\n";
+        std::cout << "5. Edit Task\n6. Exit\nEnter choice: ";
         int choice;
         std::cin >> choice;
 
@@ -23,7 +23,8 @@ int main() {
             case 2: tm.listTasks(); break;
             case 3: tm.markDone(); break;
             case 4: tm.deleteTask(); break;
-            case 5: std::cout << "Exiting...\n"; return 0;
+            case 5: tm.editTask(); break;
+            case 6: std::cout << "Exiting...\n"; return 0;
             default: std::cout << "Invalid choice!\n";
         }
     }

@@ -1,4 +1,4 @@
-1|understand all working|0
-2|push to git|0
-3|what is cli?|0
-4|add unit tests|0
+1|push to git|1
+2|what is cli?|1
+3|add unit tests|0
+4|understand all working from git history(easier)|0

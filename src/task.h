@@ -3,11 +3,15 @@
 
 #include <string>
 #include <vector>
+#include "utils.h"
 
 struct Task {
     int id;
     std::string title;
     bool completed;
+    int priority;                     // 1 = Low, 2 = Medium, 3 = High
+    std::string createdTime;          // auto-generated timestamp
+    std::string dueDate;              // optional, can be empty
 };
 
 class TaskManager {
@@ -24,6 +28,7 @@ public:
     void listTasks() const;
     void markDone();
     void deleteTask();
+    void editTask();
 };
 
 #endif

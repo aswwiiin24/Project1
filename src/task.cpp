@@ -3,6 +3,8 @@
 #include <fstream>
 #include <sstream>
 #include <limits>
+#include <algorithm>
+
 
 TaskManager::TaskManager() {
     loadTasks();
@@ -14,26 +16,43 @@ void TaskManager::saveTasks() const {
         std::cerr << "Error: Unable to save tasks.\n";
         return;
     }
+
     for (const auto &t : tasks) {
-        file << t.id << "|" << t.title << "|" << (t.completed ? 1 : 0) << "\n";
+        file << t.id << "|" 
+             << t.title << "|" 
+             << (t.completed ? 1 : 0) << "|" 
+             << t.priority << "|" 
+             << t.createdTime << "|" 
+             << t.dueDate << "\n";
     }
 }
 
 void TaskManager::loadTasks() {
     tasks.clear();
     std::ifstream file(filename);
-    if (!file) return; // no file yet, skip
+    if (!file) return; // no file yet
 
     std::string line;
     while (std::getline(file, line)) {
         std::istringstream ss(line);
-        std::string idStr, title, compStr;
+        std::string idStr, title, compStr, priStr, created, due;
 
-        if (std::getline(ss, idStr, '|') && std::getline(ss, title, '|') && std::getline(ss, compStr)) {
+        // now we expect 6 fields
+        if (std::getline(ss, idStr, '|') &&
+            std::getline(ss, title, '|') &&
+            std::getline(ss, compStr, '|') &&
+            std::getline(ss, priStr, '|') &&
+            std::getline(ss, created, '|') &&
+            std::getline(ss, due)) {
+
             Task t;
             t.id = std::stoi(idStr);
             t.title = title;
             t.completed = (compStr == "1");
+            t.priority = std::stoi(priStr);
+            t.createdTime = created;
+            t.dueDate = due;
+
             tasks.push_back(t);
         }
     }
@@ -63,6 +82,16 @@ void TaskManager::addTask() {
     t.title = title;
     t.completed = false;
 
+    t.createdTime = getCurrentTime();
+
+    std::cout << "Enter priority (1=Low, 2=Medium, 3=High): ";
+    std::cin >> t.priority;
+
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cout << "Enter due date (optional, format YYYY-MM-DD, press Enter to skip): ";
+    std::getline(std::cin, t.dueDate);
+    if (t.dueDate.empty()) t.dueDate = "N/A";
+
     tasks.push_back(t);
     saveTasks();
 
@@ -78,7 +107,10 @@ void TaskManager::listTasks() const {
     std::cout << "\n--- Task List ---\n";
     for (const auto &t : tasks) {
         std::cout << t.id << ". " << t.title
-                  << " [" << (t.completed ? "Done" : "Pending") << "]\n";
+          << " [Priority: " << t.priority << "] "
+          << "[Created: " << t.createdTime << "] "
+          << "[Due: " << t.dueDate << "] "
+          << "[" << (t.completed ? "Done" : "Pending") << "]\n";
     }
 }
 
@@ -116,3 +148,45 @@ void TaskManager::deleteTask() {
     }
     std::cout << "Invalid ID.\n";
 }
+
+void TaskManager::editTask() {
+    if (tasks.empty()) {
+        std::cout << "No tasks to edit.\n";
+        return;
+    }
+
+    std::cout << "Enter task ID to edit: ";
+    int id;
+    std::cin >> id;
+
+    auto it = std::find_if(tasks.begin(), tasks.end(),
+                           [id](const Task &t){ return t.id == id; });
+
+    if (it == tasks.end()) {
+        std::cout << "Invalid ID.\n";
+        return;
+    }
+
+    Task &t = *it;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    std::cout << "Current Title: " << t.title << "\nEnter new title (press Enter to keep same): ";
+    std::string newTitle;
+    std::getline(std::cin, newTitle);
+    if (!newTitle.empty()) t.title = newTitle;
+
+    std::cout << "Current Priority: " << t.priority << "\nEnter new priority (1=Low, 2=Medium, 3=High, 0=keep same): ";
+    int newPriority;
+    std::cin >> newPriority;
+    if (newPriority >= 1 && newPriority <= 3) t.priority = newPriority;
+
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cout << "Current Due Date: " << t.dueDate << "\nEnter new due date (YYYY-MM-DD or Enter to keep same): ";
+    std::string newDue;
+    std::getline(std::cin, newDue);
+    if (!newDue.empty()) t.dueDate = newDue;
+
+    saveTasks();
+    std::cout << "Task updated successfully.\n";
+}
+
