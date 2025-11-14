@@ -2,6 +2,7 @@
 #define FILE_STORAGE_H
 
 #include "storage.h"
+#include <json.hpp>
 #include <string>
 
 class FileStorage : public IStorage {

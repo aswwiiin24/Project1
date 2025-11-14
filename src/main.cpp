@@ -6,7 +6,7 @@
 
 int main() 
 {
-    FileStorage fs("tasks.txt");
+    FileStorage fs("tasks.json");
     TaskManager tm(&fs);
 
     while (true) {
