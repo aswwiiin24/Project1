@@ -1,6 +1,6 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++11 -O2
-SRC = src/main.cpp src/task.cpp src/utils.cpp
+CXXFLAGS = -Wall -Wextra -std=c++11 -O2 -Iinclude
+SRC = src/main.cpp src/task.cpp src/utils.cpp src/file_storage.cpp
 OUT = taskmgr
 
 all: $(OUT)

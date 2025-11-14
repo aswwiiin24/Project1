@@ -1,4 +1,5 @@
-#include "task.h"
+#include "../include/task.h"
+#include "../include/file_storage.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -6,56 +7,10 @@
 #include <algorithm>
 
 
-TaskManager::TaskManager() {
-    loadTasks();
-}
-
-void TaskManager::saveTasks() const {
-    std::ofstream file(filename, std::ios::trunc);
-    if (!file) {
-        std::cerr << "Error: Unable to save tasks.\n";
-        return;
-    }
-
-    for (const auto &t : tasks) {
-        file << t.id << "|" 
-             << t.title << "|" 
-             << (t.completed ? 1 : 0) << "|" 
-             << t.priority << "|" 
-             << t.createdTime << "|" 
-             << t.dueDate << "\n";
-    }
-}
-
-void TaskManager::loadTasks() {
-    tasks.clear();
-    std::ifstream file(filename);
-    if (!file) return; // no file yet
-
-    std::string line;
-    while (std::getline(file, line)) {
-        std::istringstream ss(line);
-        std::string idStr, title, compStr, priStr, created, due;
-
-        // now we expect 6 fields
-        if (std::getline(ss, idStr, '|') &&
-            std::getline(ss, title, '|') &&
-            std::getline(ss, compStr, '|') &&
-            std::getline(ss, priStr, '|') &&
-            std::getline(ss, created, '|') &&
-            std::getline(ss, due)) {
-
-            Task t;
-            t.id = std::stoi(idStr);
-            t.title = title;
-            t.completed = (compStr == "1");
-            t.priority = std::stoi(priStr);
-            t.createdTime = created;
-            t.dueDate = due;
-
-            tasks.push_back(t);
-        }
-    }
+TaskManager::TaskManager(IStorage* storage)
+    : storage(storage)
+{
+    storage->loadAll(tasks);
 }
 
 void TaskManager::addTask() {
@@ -93,7 +48,7 @@ void TaskManager::addTask() {
     if (t.dueDate.empty()) t.dueDate = "N/A";
 
     tasks.push_back(t);
-    saveTasks();
+    storage->saveAll(tasks);
 
     std::cout << "Task added successfully!\n";
 }
@@ -122,7 +77,7 @@ void TaskManager::markDone() {
     for (auto &t : tasks) {
         if (t.id == id) {
             t.completed = true;
-            saveTasks();
+            storage->saveAll(tasks);
             std::cout << "Task marked as done.\n";
             return;
         }
@@ -141,7 +96,7 @@ void TaskManager::deleteTask() {
             // Reassign IDs
             for (size_t i = 0; i < tasks.size(); ++i)
                 tasks[i].id = static_cast<int>(i + 1);
-            saveTasks();
+            storage->saveAll(tasks);
             std::cout << "Task deleted.\n";
             return;
         }
@@ -186,7 +141,7 @@ void TaskManager::editTask() {
     std::getline(std::cin, newDue);
     if (!newDue.empty()) t.dueDate = newDue;
 
-    saveTasks();
+    storage->saveAll(tasks);
     std::cout << "Task updated successfully.\n";
 }
 
@@ -248,7 +203,7 @@ void TaskManager::sortTasks() {
     for (size_t i = 0; i < tasks.size(); ++i)
         tasks[i].id = static_cast<int>(i + 1);
 
-    saveTasks();
+    storage->saveAll(tasks);
     std::cout << "Tasks sorted by completion and priority.\n";
 }
 

@@ -2,11 +2,15 @@
 #include <limits>
 
 #include "task.h"
+#include "file_storage.h"
 
-int main() {
-    TaskManager tm;
+int main() 
+{
+    FileStorage fs("tasks.txt");
+    TaskManager tm(&fs);
+
     while (true) {
-        std::cout << "\nOptions:\n----------\n1. Add Task    2. List Tasks  3. Mark Done   4. Delete Task\n";
+        std::cout << "\nOptions:\n---------\n";
         std::cout << "1. Add Task    2. List Tasks  3. Mark Done   4. Delete Task\n";
         std::cout << "5. Edit Task   6. Search      7. Sort        8. Exit\nEnter choice: ";
         int choice;
