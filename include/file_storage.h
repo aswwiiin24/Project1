@@ -9,7 +9,9 @@ private:
     std::string filename;
 
 public:
-    explicit FileStorage(const std::string& file);
+    explicit FileStorage(const std::string& file);  
+    //explicit stops the compiler from doing dumb implicit conversions(can lead to difficult to debug errors).
+    // BAD: implicit conversion from const char* → std::string → FileStorage
 
     bool saveAll(const std::vector<Task>& tasks) override;
     bool loadAll(std::vector<Task>& tasks) override;
