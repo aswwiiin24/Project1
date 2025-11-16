@@ -7,7 +7,6 @@ Distributed Task Management & Monitoring System
 
 - Open a terminal in the project directory.
 - Run `mingw32-make` to build.
-- Run `./taskmgr` (or `taskmgr.exe` on Windows) to start the program.
-- Run `make clean` to remove the executable and other build artifacts.
+- Run `.\taskmgr.exe` (or `taskmgr.exe` on Windows) to start the program.
 
 Refer to this section before building or running the project.

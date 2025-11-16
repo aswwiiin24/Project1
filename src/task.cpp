@@ -7,7 +7,7 @@
 #include <algorithm>
 
 
-TaskManager::TaskManager(IStorage* storage)
+TaskManager::TaskManager(IFileStorage* storage)
     : storage(storage)
 {
     storage->loadAll(tasks);

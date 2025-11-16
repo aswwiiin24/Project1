@@ -5,7 +5,7 @@
 #include <vector>
 #include "utils.h"
 
-class IStorage;  // forward declaration
+class IFileStorage;  // forward declaration
 
 struct Task {
     int id;
@@ -19,10 +19,10 @@ struct Task {
 class TaskManager {
 private:
     std::vector<Task> tasks;
-    IStorage* storage;
+    IFileStorage* storage;
 
 public:
-    explicit TaskManager(IStorage* storage);
+    explicit TaskManager(IFileStorage* storage);
     void addTask();
     void listTasks() const;  //const to ensure it doesn't modify member variables
     void markDone();

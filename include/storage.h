@@ -4,12 +4,12 @@
 #include <vector>
 #include "task.h"
 
-class IStorage {
+class IFileStorage {
 public:
     virtual bool saveAll(const std::vector<Task>& tasks) = 0;
     virtual bool loadAll(std::vector<Task>& tasks) = 0;
 
-    virtual ~IStorage() = default;
+    virtual ~IFileStorage() = default;
 };
 
 #endif

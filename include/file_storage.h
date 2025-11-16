@@ -5,7 +5,7 @@
 #include <json.hpp>
 #include <string>
 
-class FileStorage : public IStorage {
+class FileStorage : public IFileStorage {
 private:
     std::string filename;
 
