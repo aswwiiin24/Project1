@@ -3,6 +3,9 @@
 
 #include "task.h"
 #include "file_storage.h"
+#include "http_client.h"
+#include "sync.h"
+
 
 int main() 
 {
@@ -11,8 +14,9 @@ int main()
 
     while (true) {
         std::cout << "\nOptions:\n---------\n";
-        std::cout << "1. Add Task    2. List Tasks  3. Mark Done   4. Delete Task\n";
-        std::cout << "5. Edit Task   6. Search      7. Sort        8. Exit\nEnter choice: ";
+        std::cout << "1. Add Task         2. List Tasks     3. Mark Done      4. Delete Task\n";
+        std::cout << "5. Edit Task        6. Search         7. Sort           8. Sync upload\n";
+        std::cout << "9. Sync download    10. Exit\nEnter choice: ";
         int choice;
         std::cin >> choice;
 
@@ -31,7 +35,9 @@ int main()
             case 5: tm.editTask(); break;
             case 6: tm.searchTasks(); break;
             case 7: tm.sortTasks(); break;
-            case 8: std::cout << "Exiting...\n"; return 0;
+            case 8: Sync::upload("tasks.json"); break;
+            case 9: Sync::download(); break;
+            case 10: std::cout << "Exiting...\n"; return 0;
             default: std::cout << "Invalid choice!\n";
         }
     }
